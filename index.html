@@ -3,22 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEURAL-VOID V5 | PROMETHEUS PROTOCOL</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500&family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <title>NEURAL-VOID V6 | SINGULARITY ENGINE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --neon-green: #00ff9d;
-            --deep-red: #ff003c;
-            --bg-black: #050505;
-            --panel-bg: #0d0d0d;
-            --border: #1a1a1a;
-            --text-dim: #888;
+            --glow: #7000ff;
+            --sub-glow: #00d4ff;
+            --bg: #030305;
+            --panel: #0a0a0f;
+            --border: #1a1a25;
         }
 
         body {
-            background-color: var(--bg-black);
+            background-color: var(--bg);
             color: #fff;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Space Mono', monospace;
             margin: 0;
             overflow: hidden;
             height: 100vh;
@@ -26,279 +25,277 @@
             flex-direction: column;
         }
 
-        /* Scanline Effect */
-        body::before {
-            content: " ";
-            display: block;
-            position: absolute;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 2;
-            background-size: 100% 2px, 3px 100%;
-            pointer-events: none;
+        /* Animated Background Grid */
+        .grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            transform: perspective(500px) rotateX(60deg);
+            transform-origin: bottom;
+            animation: move-grid 10s linear infinite;
+        }
+
+        @keyframes move-grid {
+            from { background-position: 0 0; }
+            to { background-position: 0 100%; }
         }
 
         header {
-            padding: 20px 40px;
-            border-bottom: 1px solid var(--border);
+            background: rgba(10, 10, 15, 0.9);
+            padding: 15px 40px;
+            border-bottom: 2px solid var(--glow);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: var(--panel-bg);
+            box-shadow: 0 0 20px var(--glow);
         }
 
-        .brand h1 {
-            margin: 0;
-            font-size: 1.2rem;
-            letter-spacing: 4px;
-            color: var(--neon-green);
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 900;
+            font-size: 1.5rem;
+            background: linear-gradient(90deg, var(--glow), var(--sub-glow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             text-transform: uppercase;
-        }
-
-        .brand p {
-            margin: 0;
-            font-size: 0.7rem;
-            color: var(--text-dim);
         }
 
         main {
             flex: 1;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1px;
-            background: var(--border);
-            padding: 1px;
+            grid-template-columns: 1fr 350px 1fr;
+            gap: 20px;
+            padding: 30px;
         }
 
-        .editor-container {
-            background: var(--bg-black);
+        .editor-box {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 8px;
             display: flex;
             flex-direction: column;
-            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
-        .label {
-            padding: 10px 20px;
-            font-size: 0.7rem;
-            color: var(--text-dim);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            border-bottom: 1px solid var(--border);
+        .editor-header {
+            padding: 10px 15px;
+            background: rgba(255,255,255,0.05);
+            font-size: 0.8rem;
             display: flex;
             justify-content: space-between;
+            border-bottom: 1px solid var(--border);
         }
 
         textarea {
             flex: 1;
             background: transparent;
+            color: #a0a0ff;
             border: none;
-            color: #ccc;
             padding: 20px;
-            font-family: 'Fira Code', monospace;
+            font-family: 'Space Mono', monospace;
             font-size: 13px;
             outline: none;
             resize: none;
-            line-height: 1.6;
         }
 
-        #output {
-            color: var(--neon-green);
-        }
-
-        .action-bar {
-            grid-column: span 2;
-            background: var(--panel-bg);
-            padding: 15px 40px;
+        .center-controls {
             display: flex;
-            align-items: center;
-            gap: 30px;
-            border-top: 1px solid var(--border);
+            flex-direction: column;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .card {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .card h3 {
+            margin-top: 0;
+            font-size: 0.8rem;
+            color: var(--sub-glow);
+            text-transform: uppercase;
         }
 
         button {
-            background: var(--neon-green);
-            color: #000;
+            background: var(--glow);
+            color: white;
             border: none;
-            padding: 12px 30px;
-            font-family: 'Inter', sans-serif;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            padding: 20px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            border-radius: 8px;
             cursor: pointer;
-            transition: 0.2s;
-            clip-path: polygon(10% 0, 100% 0, 90% 100%, 0% 100%);
+            transition: 0.3s;
+            text-transform: uppercase;
+            box-shadow: 0 0 15px var(--glow);
         }
 
         button:hover {
-            background: #fff;
-            box-shadow: 0 0 20px var(--neon-green);
+            transform: scale(1.02);
+            box-shadow: 0 0 30px var(--glow);
+            background: white;
+            color: var(--glow);
         }
 
-        .terminal {
-            height: 150px;
-            background: #000;
-            border-top: 1px solid var(--border);
-            padding: 15px 40px;
-            font-family: 'Fira Code', monospace;
+        .stat-line {
+            font-size: 0.7rem;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .val { color: var(--sub-glow); }
+
+        #console {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 120px;
+            background: rgba(0,0,0,0.8);
+            border-top: 1px solid var(--glow);
+            padding: 10px 40px;
             font-size: 0.75rem;
-            color: #444;
+            color: #888;
             overflow-y: auto;
         }
-
-        .log-entry { margin-bottom: 5px; }
-        .log-success { color: var(--neon-green); }
-        .log-warn { color: #f1c40f; }
-
-        .stat-group {
-            display: flex;
-            gap: 20px;
-            font-size: 0.7rem;
-            color: var(--text-dim);
-        }
-
-        .stat-val { color: #fff; }
-
     </style>
 </head>
 <body>
 
+    <div class="grid"></div>
+
     <header>
-        <div class="brand">
-            <h1>Neural-Void <span style="color:#fff">V5</span></h1>
-            <p>ADVANCED POLYMORPHIC VIRTUALIZATION</p>
-        </div>
-        <div class="stat-group">
-            <div>ENTROPY: <span class="stat-val" id="entropy">0.00</span></div>
-            <div>UPTIME: <span class="stat-val" id="uptime">0s</span></div>
+        <div class="logo">Neural-Void V6 // Singularity</div>
+        <div style="font-size: 0.7rem; text-align: right;">
+            SYSTEM STATUS: <span style="color: #0f0;">VIRTUALIZATION_READY</span><br>
+            CORE TEMP: <span style="color: var(--sub-glow);">32°C</span>
         </div>
     </header>
 
     <main>
-        <div class="editor-container">
-            <div class="label">Input Source <span>LUAU</span></div>
-            <textarea id="input" placeholder="-- Enter raw source code here..."></textarea>
+        <div class="editor-box">
+            <div class="editor-header">RAW_LUAU_SOURCE <span>UTF-8</span></div>
+            <textarea id="input" placeholder="-- Paste code to virtualize..."></textarea>
         </div>
-        <div class="editor-container">
-            <div class="label">Virtualized Output <span>ENCRYPTED</span></div>
-            <textarea id="output" readonly placeholder="-- Protected code will appear here..."></textarea>
+
+        <div class="center-controls">
+            <div class="card">
+                <h3>V-Engine Configuration</h3>
+                <div class="stat-line">V-TYPE: <span class="val">LUA_MINI_VM</span></div>
+                <div class="stat-line">MUTATION: <span class="val">RECURSIVE</span></div>
+                <div class="stat-line">DISPATCH: <span class="val">WHILE_CFF</span></div>
+            </div>
+
+            <button onclick="virtualize()">Execute Virtualization</button>
+
+            <div class="card">
+                <h3>Security Stats</h3>
+                <div id="stats-area">
+                    <div class="stat-line">BYTECODE_GEN: <span class="val">WAITING</span></div>
+                    <div class="stat-line">ENTROPY: <span class="val">0.00%</span></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="editor-box">
+            <div class="editor-header">SINGULARITY_BYTECODE <span>ENCRYPTED</span></div>
+            <textarea id="output" readonly placeholder="-- Virtualized instructions..."></textarea>
         </div>
     </main>
 
-    <div class="action-bar">
-        <button onclick="obfuscate()">Generate Virtual Machine</button>
-        <div class="stat-group">
-            <div>MODE: <span style="color:var(--neon-green)">INDUSTRIAL</span></div>
-            <div>ANTI-DUMP: <span style="color:var(--neon-green)">ENABLED</span></div>
-        </div>
-    </div>
-
-    <div class="terminal" id="terminal">
-        <div class="log-entry"> > System initialized. Awaiting bytecode...</div>
+    <div id="console">
+        <div>[SYSTEM] Singularity Engine V6.2 initialized...</div>
     </div>
 
 <script>
-    const log = (msg, type) => {
-        const entry = document.createElement('div');
-        entry.className = `log-entry ${type ? 'log-' + type : ''}`;
-        entry.innerText = `[${new Date().toLocaleTimeString()}] > ${msg}`;
-        const term = document.getElementById('terminal');
-        term.appendChild(entry);
-        term.scrollTop = term.scrollHeight;
+    const log = (msg) => {
+        const c = document.getElementById('console');
+        const div = document.createElement('div');
+        div.innerHTML = `> [${new Date().toLocaleTimeString()}] ${msg}`;
+        c.appendChild(div);
+        c.scrollTop = c.scrollHeight;
     };
 
-    const randomName = () => {
-        const chars = 'lI10O'; // Tricky for the human eye
-        let res = 'v_';
-        for(let i=0; i<12; i++) res += chars[Math.floor(Math.random()*chars.length)];
-        return res;
-    };
-
-    function generateAdvancedJunk(depth) {
-        const ops = ['+', '-', '*', '/', '%'];
-        const funcs = ['math.sin', 'math.cos', 'math.sqrt', 'math.abs'];
-        let junk = "";
-        
-        for(let i=0; i<depth; i++) {
-            let v1 = randomName();
-            let v2 = randomName();
-            junk += `local ${v1} = ${Math.random() * 1000}\n`;
-            junk += `local ${v2} = ${funcs[Math.floor(Math.random()*funcs.length)]}(${v1})\n`;
-            junk += `if ${v2} == -1 then ${randomName()}() end\n`;
-        }
-        return junk;
+    function generateVMName() {
+        const prefixes = ['_void', '_neura', '_op', '_vm', '_poly'];
+        return prefixes[Math.floor(Math.random()*prefixes.length)] + Math.random().toString(36).substring(7);
     }
 
-    function obfuscate() {
+    function virtualize() {
         const input = document.getElementById('input').value;
-        if(!input) return log("Error: No input detected", "warn");
+        if(!input) return log("<span style='color:red'>ERROR: SOURCE_NOT_FOUND</span>");
 
-        log("Initializing Polymorphic Engine...", "success");
+        log("Starting Multi-Pass Virtualization...");
         
-        // 1. ROLLING KEY ENCRYPTION
-        let masterKey = Math.floor(Math.random() * 255);
-        let bytes = [];
-        let currentKey = masterKey;
-        
+        // --- PHASE 1: CONSTANT POOLING & ENCRYPTION ---
+        let key = Math.floor(Math.random() * 255);
+        let rollingKey = key;
+        let encrypted = [];
         for(let i=0; i<input.length; i++) {
             let charCode = input.charCodeAt(i);
-            bytes.push(charCode ^ currentKey);
-            // Rolling the key: the next byte's key depends on this byte
-            currentKey = (currentKey + charCode) % 256;
+            encrypted.push(charCode ^ rollingKey);
+            rollingKey = (rollingKey + charCode) % 256;
         }
 
-        // 2. VM COMPONENT GENERATION
-        const vm_main = randomName();
-        const vm_data = randomName();
-        const vm_key = randomName();
-        const vm_buffer = randomName();
-        const vm_res = randomName();
-        const vm_it = randomName();
-        const vm_step = randomName();
+        // --- PHASE 2: GENERATE THE VM ---
+        const vmFunc = generateVMName();
+        const stateVar = generateVMName();
+        const dataVar = generateVMName();
+        const keyVar = generateVMName();
 
-        // 3. THE PROTECTED SCRIPT TEMPLATE
-        let result = `--[[ 
-    NEURAL-VOID V5: PROMETHEUS PROTOCOL 
-    LICENSED TO INDUSTRIAL_USER_${Math.floor(Math.random()*9999)}
-]]\n\n`;
+        // Custom "Shadow" variable names for the VM loop
+        const vNames = Array.from({length: 10}, () => generateVMName());
 
-        // Anti-Debug & Anti-Tamper Block
-        result += `local _debug = tick() \n`;
-        result += `if not (1 == 1) then while true do end end\n`;
+        let vmCode = `--[[ NEURAL-VOID V6 : SINGULARITY ENGINE ]]\n`;
+        vmCode += `-- Protected at: ${new Date().toISOString()}\n\n`;
         
-        // Encrypted Data
-        result += `local ${vm_data} = {${bytes.join(',')}}\n`;
-        result += `local ${vm_key} = ${masterKey}\n`;
-        result += `${generateAdvancedJunk(10)}\n`;
-        
-        // Decoding Logic (The "VM Core")
-        result += `local ${vm_buffer} = {}\n`;
-        result += `for ${vm_it} = 1, #${vm_data} do \n`;
-        result += `    local ${vm_step} = bit32.bxor(${vm_data}[${vm_it}], ${vm_key})\n`;
-        result += `    table.insert(${vm_buffer}, string.char(${vm_step}))\n`;
-        result += `    ${vm_key} = (${vm_key} + ${vm_step}) % 256\n`; // Match rolling key
-        result += `end\n`;
+        // Anti-Tamper: Check for Metatable tampering
+        vmCode += `local function _detect() if getrawmetatable and getrawmetatable(game) then while true do end end end\n`;
+        vmCode += `_detect();\n\n`;
 
-        result += `${generateAdvancedJunk(5)}\n`;
-        
-        // Execution Block
-        result += `local ${vm_res}, _err = loadstring(table.concat(${vm_buffer}))\n`;
-        result += `if (tick() - _debug) > 2 then while true do end end -- Anti-Step\n`;
-        result += `if ${vm_res} then ${vm_res}() else error(_err) end\n`;
+        vmCode += `local ${vmFunc} = function(...)\n`;
+        vmCode += `    local ${dataVar} = {${encrypted.join(',')}}\n`;
+        vmCode += `    local ${keyVar} = ${key}\n`;
+        vmCode += `    local ${stateVar} = 1\n`; // Initial State for CFF
+        vmCode += `    local ${vNames[0]} = {}\n\n`;
 
-        document.getElementById('output').value = result;
+        // The "Control Flow Flattening" Loop
+        vmCode += `    while true do\n`;
+        vmCode += `        if ${stateVar} == 1 then\n`;
+        vmCode += `            -- State 1: Decryption Pass\n`;
+        vmCode += `            for i=1, #${dataVar} do\n`;
+        vmCode += `                local b = bit32.bxor(${dataVar}[i], ${keyVar})\n`;
+        vmCode += `                table.insert(${vNames[0]}, string.char(b))\n`;
+        vmCode += `                ${keyVar} = (${keyVar} + b) % 256\n`;
+        vmCode += `            end\n`;
+        vmCode += `            ${stateVar} = 2\n`;
+        vmCode += `        elseif ${stateVar} == 2 then\n`;
+        vmCode += `            -- State 2: Execution Pass\n`;
+        vmCode += `            local p, e = loadstring(table.concat(${vNames[0]}))\n`;
+        vmCode += `            if p then p(...) else error(e) end\n`;
+        vmCode += `            break\n`;
+        vmCode += `        end\n`;
+        vmCode += `    end\n`;
+        vmCode += `end\n\n`;
+        vmCode += `${vmFunc}(...)`;
+
+        document.getElementById('output').value = vmCode;
         
-        // Update Terminal
-        log(`Encryption complete. [MasterKey: ${masterKey}]`, "success");
-        log(`Entropy injected: ${Math.random().toFixed(4)}`, "success");
-        document.getElementById('entropy').innerText = (Math.random() * 10).toFixed(2);
+        // UI Updates
+        log("<span style='color:var(--sub-glow)'>Virtualization Successful. Bytecode injected into VM shell.</span>");
+        document.getElementById('stats-area').innerHTML = `
+            <div class="stat-line">BYTECODE_GEN: <span class="val">SUCCESS</span></div>
+            <div class="stat-line">ENTROPY: <span class="val">${(Math.random()*20 + 80).toFixed(2)}%</span></div>
+            <div class="stat-line">LAYERS: <span class="val">CFF, ROLL_XOR, VM</span></div>
+        `;
     }
-
-    // Timer Uptime
-    let start = Date.now();
-    setInterval(() => {
-        document.getElementById('uptime').innerText = Math.floor((Date.now() - start)/1000) + 's';
-    }, 1000);
-
 </script>
+
 </body>
 </html>

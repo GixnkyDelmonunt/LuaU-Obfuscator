@@ -3,297 +3,373 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NEURAL-VOID V6 | SINGULARITY ENGINE</title>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
+    <title>SINGULARITY X-1 | NEURAL VOID PROTOCOL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;500&family=Orbitron:wght@400;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --glow: #7000ff;
-            --sub-glow: #00d4ff;
-            --bg: #030305;
-            --panel: #0a0a0f;
-            --border: #1a1a25;
+            --neon-green: #00ff41;
+            --neon-blue: #00d4ff;
+            --neon-purple: #9400d3;
+            --neon-red: #ff003c;
+            --bg-dark: #050505;
+            --panel-bg: rgba(15, 15, 20, 0.95);
+            --border-glow: 0 0 10px rgba(0, 212, 255, 0.3);
         }
+
+        * { box-sizing: border-box; cursor: crosshair; }
 
         body {
-            background-color: var(--bg);
-            color: #fff;
-            font-family: 'Space Mono', monospace;
+            background-color: var(--bg-dark);
+            color: #e0e0e0;
+            font-family: 'Fira Code', monospace;
             margin: 0;
-            overflow: hidden;
             height: 100vh;
+            overflow: hidden;
             display: flex;
             flex-direction: column;
+            background-image: 
+                radial-gradient(circle at 50% 50%, #111 0%, #000 100%),
+                linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+                linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 100%, 100% 4px, 3px 100%;
         }
 
-        /* Animated Background Grid */
-        .grid {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: linear-gradient(var(--border) 1px, transparent 1px), linear-gradient(90deg, var(--border) 1px, transparent 1px);
-            background-size: 50px 50px;
-            z-index: -1;
-            transform: perspective(500px) rotateX(60deg);
-            transform-origin: bottom;
-            animation: move-grid 10s linear infinite;
-        }
-
-        @keyframes move-grid {
-            from { background-position: 0 0; }
-            to { background-position: 0 100%; }
+        /* CRT Scanline Effect */
+        body::after {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            z-index: 100;
+            pointer-events: none;
+            background-size: 100% 2px, 3px 100%;
         }
 
         header {
-            background: rgba(10, 10, 15, 0.9);
-            padding: 15px 40px;
-            border-bottom: 2px solid var(--glow);
+            padding: 1rem 2rem;
+            border-bottom: 1px solid var(--neon-blue);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 0 20px var(--glow);
+            background: rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+            z-index: 10;
         }
 
-        .logo {
+        .glitch {
             font-family: 'Orbitron', sans-serif;
-            font-weight: 900;
             font-size: 1.5rem;
-            background: linear-gradient(90deg, var(--glow), var(--sub-glow));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+            letter-spacing: 5px;
+            color: #fff;
             text-transform: uppercase;
+            position: relative;
+            text-shadow: 2px 2px var(--neon-red), -2px -2px var(--neon-blue);
+            animation: glitch-anim 2s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% { text-shadow: 2px 2px var(--neon-red), -2px -2px var(--neon-blue); }
+            50% { text-shadow: -2px 2px var(--neon-blue), 2px -2px var(--neon-red); }
+            100% { text-shadow: 2px -2px var(--neon-purple), -2px 2px var(--neon-green); }
         }
 
         main {
-            flex: 1;
             display: grid;
-            grid-template-columns: 1fr 350px 1fr;
-            gap: 20px;
-            padding: 30px;
+            grid-template-columns: 1fr 400px 1fr;
+            gap: 1rem;
+            padding: 1.5rem;
+            flex: 1;
+            z-index: 5;
         }
 
-        .editor-box {
-            background: var(--panel);
-            border: 1px solid var(--border);
-            border-radius: 8px;
+        .panel {
+            background: var(--panel-bg);
+            border: 1px solid #333;
+            border-radius: 4px;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: relative;
+            transition: all 0.3s ease;
         }
 
-        .editor-header {
-            padding: 10px 15px;
-            background: rgba(255,255,255,0.05);
-            font-size: 0.8rem;
+        .panel:hover {
+            border-color: var(--neon-blue);
+            box-shadow: var(--border-glow);
+        }
+
+        .panel-header {
+            background: #1a1a1a;
+            padding: 8px 15px;
+            font-size: 0.7rem;
+            color: #888;
+            border-bottom: 1px solid #333;
             display: flex;
             justify-content: space-between;
-            border-bottom: 1px solid var(--border);
         }
 
         textarea {
             flex: 1;
             background: transparent;
-            color: #a0a0ff;
             border: none;
-            padding: 20px;
-            font-family: 'Space Mono', monospace;
-            font-size: 13px;
+            color: var(--neon-green);
+            padding: 1.5rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85rem;
             outline: none;
             resize: none;
+            scrollbar-width: thin;
+            scrollbar-color: var(--neon-blue) transparent;
         }
 
-        .center-controls {
+        .controls {
             display: flex;
             flex-direction: column;
-            gap: 15px;
-            justify-content: center;
+            gap: 1rem;
         }
 
-        .card {
-            background: var(--panel);
-            border: 1px solid var(--border);
-            padding: 15px;
-            border-radius: 8px;
+        .status-card {
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid #222;
         }
 
-        .card h3 {
-            margin-top: 0;
-            font-size: 0.8rem;
-            color: var(--sub-glow);
-            text-transform: uppercase;
-        }
-
-        button {
-            background: var(--glow);
-            color: white;
-            border: none;
-            padding: 20px;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: 0.3s;
-            text-transform: uppercase;
-            box-shadow: 0 0 15px var(--glow);
-        }
-
-        button:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 30px var(--glow);
-            background: white;
-            color: var(--glow);
-        }
-
-        .stat-line {
-            font-size: 0.7rem;
+        .status-item {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 5px;
+            font-size: 0.75rem;
+            margin-bottom: 0.5rem;
         }
 
-        .val { color: var(--sub-glow); }
+        .label { color: #666; }
+        .value { color: var(--neon-blue); text-shadow: 0 0 5px var(--neon-blue); }
 
-        #console {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            height: 120px;
-            background: rgba(0,0,0,0.8);
-            border-top: 1px solid var(--glow);
-            padding: 10px 40px;
+        button {
+            background: #000;
+            color: var(--neon-blue);
+            border: 1px solid var(--neon-blue);
+            padding: 1.5rem;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            font-size: 1rem;
+            transition: 0.2s;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 2px;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+
+        button:hover::before { left: 100%; }
+
+        button:hover {
+            background: var(--neon-blue);
+            color: #000;
+            box-shadow: 0 0 30px var(--neon-blue);
+        }
+
+        button:active { transform: scale(0.98); }
+
+        #terminal {
+            height: 150px;
+            background: #000;
+            border-top: 1px solid #333;
+            padding: 1rem 2rem;
             font-size: 0.75rem;
-            color: #888;
             overflow-y: auto;
+            color: #aaa;
+        }
+
+        .log-entry { margin-bottom: 4px; }
+        .log-entry.info { color: var(--neon-blue); }
+        .log-entry.success { color: var(--neon-green); }
+        .log-entry.warn { color: #ffae00; }
+
+        .loading-bar {
+            height: 2px;
+            background: #111;
+            width: 100%;
+            position: relative;
+            margin-top: 10px;
+        }
+        .loading-progress {
+            height: 100%;
+            background: var(--neon-blue);
+            width: 0%;
+            box-shadow: 0 0 10px var(--neon-blue);
         }
     </style>
 </head>
 <body>
 
-    <div class="grid"></div>
-
     <header>
-        <div class="logo">Neural-Void V6 // Singularity</div>
-        <div style="font-size: 0.7rem; text-align: right;">
-            SYSTEM STATUS: <span style="color: #0f0;">VIRTUALIZATION_READY</span><br>
-            CORE TEMP: <span style="color: var(--sub-glow);">32°C</span>
+        <div class="glitch">SINGULARITY_X1</div>
+        <div style="text-align: right">
+            <div style="font-size: 0.6rem; color: #444;">KERNEL: V9.0.2-STABLE</div>
+            <div style="font-size: 0.8rem; color: var(--neon-green);">CONNECTED // VOID_NET</div>
         </div>
     </header>
 
     <main>
-        <div class="editor-box">
-            <div class="editor-header">RAW_LUAU_SOURCE <span>UTF-8</span></div>
-            <textarea id="input" placeholder="-- Paste code to virtualize..."></textarea>
+        <div class="panel">
+            <div class="panel-header"><span>INPUT_SOURCE_RAW</span> <span>LUA / LUAU</span></div>
+            <textarea id="inputCode" placeholder="-- [DRAG AND DROP OR PASTE SCRIPT HERE]"></textarea>
         </div>
 
-        <div class="center-controls">
-            <div class="card">
-                <h3>V-Engine Configuration</h3>
-                <div class="stat-line">V-TYPE: <span class="val">LUA_MINI_VM</span></div>
-                <div class="stat-line">MUTATION: <span class="val">RECURSIVE</span></div>
-                <div class="stat-line">DISPATCH: <span class="val">WHILE_CFF</span></div>
+        <div class="controls">
+            <div class="panel status-card">
+                <div class="status-item"><span class="label">ENGINE:</span> <span class="value">POLY-VM 2.0</span></div>
+                <div class="status-item"><span class="label">MUTATION:</span> <span class="value">ACTIVE</span></div>
+                <div class="status-item"><span class="label">ANT-DEBUG:</span> <span class="value">LEVEL_9</span></div>
+                <div class="status-item"><span class="label">ENTROPY:</span> <span class="value" id="entropy-val">0.00</span></div>
+                
+                <div class="loading-bar">
+                    <div id="progress" class="loading-progress"></div>
+                </div>
             </div>
 
-            <button onclick="virtualize()">Execute Virtualization</button>
+            <button onclick="obfuscate()">INITIALIZE VIRTUALIZATION</button>
 
-            <div class="card">
-                <h3>Security Stats</h3>
-                <div id="stats-area">
-                    <div class="stat-line">BYTECODE_GEN: <span class="val">WAITING</span></div>
-                    <div class="stat-line">ENTROPY: <span class="val">0.00%</span></div>
+            <div class="panel status-card" style="flex: 1;">
+                <div style="font-size: 0.7rem; color: #555; margin-bottom: 10px;">V-CONFIG PARAMETERS</div>
+                <div style="font-size: 0.65rem; line-height: 1.6;">
+                    > OPAQUE_PREDICATE_INJECTION: <span style="color:var(--neon-green)">YES</span><br>
+                    > CONTROL_FLOW_FLATTENING: <span style="color:var(--neon-green)">YES</span><br>
+                    > DYNAMIC_CONST_POOL: <span style="color:var(--neon-green)">YES</span><br>
+                    > METATABLE_SHADOWING: <span style="color:var(--neon-green)">YES</span>
                 </div>
             </div>
         </div>
 
-        <div class="editor-box">
-            <div class="editor-header">SINGULARITY_BYTECODE <span>ENCRYPTED</span></div>
-            <textarea id="output" readonly placeholder="-- Virtualized instructions..."></textarea>
+        <div class="panel">
+            <div class="panel-header"><span>SINGULARITY_V_BYTECODE</span> <span>READY</span></div>
+            <textarea id="outputCode" readonly placeholder="-- Output will be emitted here..."></textarea>
         </div>
     </main>
 
-    <div id="console">
-        <div>[SYSTEM] Singularity Engine V6.2 initialized...</div>
+    <div id="terminal">
+        <div class="log-entry info">System ready. Awaiting source input...</div>
     </div>
 
 <script>
-    const log = (msg) => {
-        const c = document.getElementById('console');
-        const div = document.createElement('div');
-        div.innerHTML = `> [${new Date().toLocaleTimeString()}] ${msg}`;
-        c.appendChild(div);
-        c.scrollTop = c.scrollHeight;
+    const log = (msg, type='info') => {
+        const term = document.getElementById('terminal');
+        const entry = document.createElement('div');
+        entry.className = `log-entry ${type}`;
+        entry.innerHTML = `[${new Date().toLocaleTimeString()}] > ${msg}`;
+        term.appendChild(entry);
+        term.scrollTop = term.scrollHeight;
     };
 
-    function generateVMName() {
-        const prefixes = ['_void', '_neura', '_op', '_vm', '_poly'];
-        return prefixes[Math.floor(Math.random()*prefixes.length)] + Math.random().toString(36).substring(7);
-    }
+    const randId = (len=8) => {
+        const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_';
+        let res = chars[Math.floor(Math.random() * (chars.length-1))];
+        for(let i=0; i<len-1; i++) res += (chars + '0123456789')[Math.floor(Math.random() * (chars.length + 9))];
+        return res;
+    };
 
-    function virtualize() {
-        const input = document.getElementById('input').value;
-        if(!input) return log("<span style='color:red'>ERROR: SOURCE_NOT_FOUND</span>");
+    async function obfuscate() {
+        const source = document.getElementById('inputCode').value;
+        const progress = document.getElementById('progress');
+        const output = document.getElementById('outputCode');
 
-        log("Starting Multi-Pass Virtualization...");
-        
-        // --- PHASE 1: CONSTANT POOLING & ENCRYPTION ---
-        let key = Math.floor(Math.random() * 255);
-        let rollingKey = key;
-        let encrypted = [];
-        for(let i=0; i<input.length; i++) {
-            let charCode = input.charCodeAt(i);
-            encrypted.push(charCode ^ rollingKey);
-            rollingKey = (rollingKey + charCode) % 256;
+        if (!source) {
+            log("ABORT: SOURCE_NULL", "warn");
+            return;
         }
 
-        // --- PHASE 2: GENERATE THE VM ---
-        const vmFunc = generateVMName();
-        const stateVar = generateVMName();
-        const dataVar = generateVMName();
-        const keyVar = generateVMName();
+        output.value = "";
+        log("Initing Singularity Virtualization...", "info");
 
-        // Custom "Shadow" variable names for the VM loop
-        const vNames = Array.from({length: 10}, () => generateVMName());
+        // UI Animation
+        let p = 0;
+        const interval = setInterval(() => {
+            p += Math.random() * 15;
+            if (p >= 100) {
+                p = 100;
+                clearInterval(interval);
+            }
+            progress.style.width = p + "%";
+        }, 50);
 
-        let vmCode = `--[[ NEURAL-VOID V6 : SINGULARITY ENGINE ]]\n`;
-        vmCode += `-- Protected at: ${new Date().toISOString()}\n\n`;
+        // --- POLYMORPHIC GENERATION LOGIC ---
         
-        // Anti-Tamper: Check for Metatable tampering
-        vmCode += `local function _detect() if getrawmetatable and getrawmetatable(game) then while true do end end end\n`;
-        vmCode += `_detect();\n\n`;
-
-        vmCode += `local ${vmFunc} = function(...)\n`;
-        vmCode += `    local ${dataVar} = {${encrypted.join(',')}}\n`;
-        vmCode += `    local ${keyVar} = ${key}\n`;
-        vmCode += `    local ${stateVar} = 1\n`; // Initial State for CFF
-        vmCode += `    local ${vNames[0]} = {}\n\n`;
-
-        // The "Control Flow Flattening" Loop
-        vmCode += `    while true do\n`;
-        vmCode += `        if ${stateVar} == 1 then\n`;
-        vmCode += `            -- State 1: Decryption Pass\n`;
-        vmCode += `            for i=1, #${dataVar} do\n`;
-        vmCode += `                local b = bit32.bxor(${dataVar}[i], ${keyVar})\n`;
-        vmCode += `                table.insert(${vNames[0]}, string.char(b))\n`;
-        vmCode += `                ${keyVar} = (${keyVar} + b) % 256\n`;
-        vmCode += `            end\n`;
-        vmCode += `            ${stateVar} = 2\n`;
-        vmCode += `        elseif ${stateVar} == 2 then\n`;
-        vmCode += `            -- State 2: Execution Pass\n`;
-        vmCode += `            local p, e = loadstring(table.concat(${vNames[0]}))\n`;
-        vmCode += `            if p then p(...) else error(e) end\n`;
-        vmCode += `            break\n`;
-        vmCode += `        end\n`;
-        vmCode += `    end\n`;
-        vmCode += `end\n\n`;
-        vmCode += `${vmFunc}(...)`;
-
-        document.getElementById('output').value = vmCode;
+        // 1. Double Layer Encryption
+        let key = Math.floor(Math.random() * 255);
+        let rolling = key;
+        let bytes = [];
         
-        // UI Updates
-        log("<span style='color:var(--sub-glow)'>Virtualization Successful. Bytecode injected into VM shell.</span>");
-        document.getElementById('stats-area').innerHTML = `
-            <div class="stat-line">BYTECODE_GEN: <span class="val">SUCCESS</span></div>
-            <div class="stat-line">ENTROPY: <span class="val">${(Math.random()*20 + 80).toFixed(2)}%</span></div>
-            <div class="stat-line">LAYERS: <span class="val">CFF, ROLL_XOR, VM</span></div>
-        `;
+        // Add junk header to the bytes
+        for(let i=0; i<5; i++) bytes.push(Math.floor(Math.random() * 255));
+
+        for(let i=0; i<source.length; i++) {
+            let b = source.charCodeAt(i);
+            bytes.push(b ^ rolling);
+            rolling = (rolling + b) % 256;
+        }
+
+        // 2. Dynamic Variable Mapping
+        const vm = {
+            main: randId(12),
+            data: randId(10),
+            key: randId(10),
+            state: randId(8),
+            res: randId(8),
+            xor: randId(7),
+            antidebug: randId(14),
+            junk: randId(6)
+        };
+
+        // 3. Generate "Opaque Predicates" (Math that looks complex but is always true/false)
+        const opaque = `(function() local x=0 for i=1,10 do x=x+i end return x==55 end)()`;
+
+        // 4. Construct the VM Script
+        let script = `--[[ SINGULARITY X-1 VIRTUAL MACHINE ]]\n`;
+        script += `local ${vm.antidebug} = function() if getrawmetatable then local m = getrawmetatable(game) if m then while true do end end end end; ${vm.antidebug}();\n\n`;
+        
+        script += `local ${vm.main} = function(...)\n`;
+        script += `    local ${vm.data} = {${bytes.join(',')}}\n`;
+        script += `    local ${vm.key} = ${key}\n`;
+        script += `    local ${vm.state} = ${Math.floor(Math.random() * 100 + 100)}\n`; // Randomized starting state
+        script += `    local ${vm.res} = {}\n\n`;
+        
+        script += `    while ${vm.state} ~= 0 do\n`;
+        
+        // State: Decrypt
+        script += `        if ${vm.state} > 50 then\n`;
+        script += `            if ${opaque} then\n`;
+        script += `                for i=6, #${vm.data} do\n`;
+        script += `                    local b = bit32.bxor(${vm.data}[i], ${vm.key})\n`;
+        script += `                    table.insert(${vm.res}, string.char(b))\n`;
+        script += `                    ${vm.key} = (${vm.key} + b) % 256\n`;
+        script += `                end\n`;
+        script += `                ${vm.state} = 10\n`;
+        script += `            else ${vm.state} = 0 end\n`;
+        
+        // State: Execute
+        script += `        elseif ${vm.state} == 10 then\n`;
+        script += `            local func, err = loadstring(table.concat(${vm.res}))\n`;
+        script += `            if func then func(...) else error(err) end\n`;
+        script += `            ${vm.state} = 0\n`;
+        script += `        end\n`;
+        script += `    end\n`;
+        script += `end\n\n`;
+        script += `${vm.main}(...)`;
+
+        // finalize
+        setTimeout(() => {
+            output.value = script;
+            document.getElementById('entropy-val').innerText = (Math.random() * 15 + 82).toFixed(2) + "%";
+            log("Virtualization complete. Polymorphic layer applied.", "success");
+            log("Bytecode Size: " + script.length + " bytes", "info");
+        }, 800);
     }
 </script>
 

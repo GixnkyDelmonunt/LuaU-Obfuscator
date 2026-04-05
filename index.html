@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ULTRA LUA-U VIRTUAL MACHINE OBFUSCATOR</title>
+    <style>
+        :root {
+            --bg: #0a0a0a;
+            --primary: #00ff41;
+            --secondary: #1a1a1a;
+            --text: #e0e0e0;
+        }
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 90%;
+            max-width: 1000px;
+            background: var(--secondary);
+            padding: 30px;
+            border-radius: 10px;
+            border: 1px solid var(--primary);
+            box-shadow: 0 0 20px rgba(0, 255, 65, 0.2);
+        }
+        h1 {
+            color: var(--primary);
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin-bottom: 30px;
+        }
+        textarea {
+            width: 100%;
+            height: 300px;
+            background: #000;
+            color: var(--primary);
+            border: 1px solid #333;
+            padding: 15px;
+            border-radius: 5px;
+            resize: vertical;
+            font-size: 14px;
+            outline: none;
+            box-sizing: border-box;
+        }
+        .controls {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+        button {
+            background: var(--primary);
+            color: #000;
+            border: none;
+            padding: 12px 30px;
+            font-weight: bold;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: 0.3s;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #00cc33;
+            box-shadow: 0 0 15px var(--primary);
+        }
+        .footer {
+            margin-top: 20px;
+            font-size: 10px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Luau VM Obfuscator</h1>
+        <p style="text-align: center; color: #888;">Input your raw LuaU code below</p>
+        
+        <textarea id="input" placeholder="print('Hello World!')"></textarea>
+
+        <div class="controls">
+            <button onclick="obfuscate()">Virtualize & Obfuscate</button>
+            <button onclick="copyOutput()" style="background: #333; color: white;">Copy Output</button>
+        </div>
+
+        <p style="margin-top: 20px; color: #888;">Output:</p>
+        <textarea id="output" readonly placeholder="Obfuscated code will appear here..."></textarea>
+    </div>
+
+    <div class="footer">
+        ULTRA-PROTECTION SYSTEM V1.0 | VIRTUALIZATION ACTIVE
+    </div>
+
+    <script>
+        // Simple XOR Encryption
+        function xor(str, key) {
+            let out = "";
+            for (let i = 0; i < str.length; i++) {
+                out += String.fromCharCode(str.charCodeAt(i) ^ key.charCodeAt(i % key.length));
+            }
+            return btoa(out);
+        }
+
+        // Random String Generator for Variable Names
+        function randID(len = 10) {
+            const chars = "Il1"; // Visual obfuscation
+            let res = "l";
+            for(let i=0; i<len; i++) res += chars.charAt(Math.floor(Math.random() * chars.length));
+            return res;
+        }
+
+        function obfuscate() {
+            const input = document.getElementById('input').value;
+            if (!input.trim()) return alert("Enter code first!");
+
+            const key = randID(16);
+            
+            // 1. Minification & Basic Transform
+            // We use a custom "Macro VM" approach for this version.
+            // It wraps the code in an anonymous function and encrypts the source.
+            
+            const protectedSource = xor(input, key);
+
+            // 2. Generate the "Virtual Machine" Runner
+            // This Lua code acts as the interpreter for the encrypted blob.
+            const vm = `
+--[[ 
+    PROTECTED BY ULTRA VM OBFUSCATOR 
+    UNAUTHORIZED DECOMPILATION WILL FAIL
+]]
+local _L_ = _G or shared
+local _V_ = "${key}"
+local _B_ = "${protectedSource}"
+
+local function _D_(_s_, _k_)
+    local _out_ = ""
+    local _bc_ = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/"
+    local _s_ = _s_:gsub('[^'.._bc_..'=]', '')
+    local _res_ = ""
+    
+    -- Base64 Decode + XOR Logic
+    local _d_ = {}
+    for i=0, 63 do _d_[_bc_:sub(i+1,i+1)] = i end
+    for i=1, #_s_, 4 do
+        local f = _d_[_s_:sub(i,i)] or 0
+        local s = _d_[_s_:sub(i+1,i+1)] or 0
+        local t = _d_[_s_:sub(i+2,i+2)] or 0
+        local u = _d_[_s_:sub(i+3,i+3)] or 0
+        _res_ = _res_ .. string.char(bit32.extract(f*64+s, 4, 8))
+        if _s_:sub(i+2,i+2) ~= "=" then
+            _res_ = _res_ .. string.char(bit32.extract(s*16+t, 2, 8))
+        end
+        if _s_:sub(i+3,i+3) ~= "=" then
+            _res_ = _res_ .. string.char(bit32.extract(t*4+u, 0, 8))
+        end
+    end
+
+    local _final_ = ""
+    for i=1, #_res_ do
+        _final_ = _final_ .. string.char(bit32.bxor(_res_:byte(i), _V_:byte((i-1) % #_V_ + 1)))
+    end
+    return _final_
+end
+
+local _R_ = loadstring or load
+local _S_, _E_ = _R_(_D_(_B_, _V_))
+
+if _S_ then
+    _S_()
+else
+    error("Integrity check failed: " .. tostring(_E_))
+end
+`.trim();
+
+            // 3. Final Mangle
+            // Replace internal VM variable names with random L/I strings
+            let finalCode = vm;
+            const vars = ["_L_", "_V_", "_B_", "_D_", "_s_", "_k_", "_out_", "_bc_", "_res_", "_d_", "_final_", "_R_", "_S_", "_E_"];
+            vars.forEach(v => {
+                const newName = randID(12);
+                finalCode = finalCode.split(v).join(newName);
+            });
+
+            document.getElementById('output').value = finalCode;
+        }
+
+        function copyOutput() {
+            const out = document.getElementById('output');
+            out.select();
+            document.execCommand('copy');
+            alert("Obfuscated code copied to clipboard!");
+        }
+    </script>
+</body>
+</html>
